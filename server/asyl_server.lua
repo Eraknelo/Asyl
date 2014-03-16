@@ -19,7 +19,6 @@ end
 function Asyl:Request(args, player)
 	local handle = args.handle
 	local arguments = args.arguments
-	local state = args.state
 	
 	local callback = self.requestHandlers[handle]
 	if callback == nil then
@@ -28,5 +27,5 @@ function Asyl:Request(args, player)
 	end
 	
 	local data = callback(arguments)
-	Network:Send(player, self.sendName, { handle = handle, data = data, state = state })
+	Network:Send(player, self.sendName, { handle = handle, data = data })
 end

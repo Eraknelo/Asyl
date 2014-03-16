@@ -26,8 +26,8 @@ function Asyl:GetData(handle, callback, arguments, state)
 		return
 	end
 
-	self.awaitingHandles[handle] = callback
-	Network:Send(self.sendName, { handle = handle, arguments = arguments, state = state })
+	self.awaitingHandles[handle] = { callback = callback, state = state }
+	Network:Send(self.sendName, { handle = handle, arguments = arguments })
 end
 
 function Asyl:Callback(args)
@@ -35,11 +35,11 @@ function Asyl:Callback(args)
 	local data = args.data
 	local state = args.state
 	
-	local callbackHandler = self.awaitingHandles[handle]
-	if callbackHandler == nil then
+	local awaitingHandle = self.awaitingHandles[handle]
+	if awaitingHandle == nil then
 		print("Asyl callback was made, but found no handler. Handle: \"" .. handle .. "\".")
 		return
 	end
 	
-	callbackHandler(data, state)
+	awaitingHandle.callback(data, awaitingHandle.state)
 end
